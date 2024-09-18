@@ -4,7 +4,7 @@ import { LocationSelectionComponent } from '../components/location-selection/loc
 import { ResultsComponent } from '../components/results/results.component';
 import { SimulationComponent } from '../components/simulation/simulation.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', component: LocationSelectionComponent },
   { path: 'results', component: ResultsComponent },
   { path: 'simulation', component: SimulationComponent }

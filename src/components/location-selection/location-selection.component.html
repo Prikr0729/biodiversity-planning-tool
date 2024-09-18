@@ -1,0 +1,37 @@
+<div class="coordinates-container">
+    <h3>Choose Your Location Method</h3>
+    <div class="location-method">
+      <label>
+        <input type="radio" [(ngModel)]="locationMethod" value="manual" (change)="toggleInputFields()" />
+        Enter Coordinates Manually
+      </label>
+      <label>
+        <input type="radio" [(ngModel)]="locationMethod" value="map" (change)="toggleInputFields()" />
+        Locate on Map
+      </label>
+    </div>
+  
+    <div *ngIf="locationMethod === 'manual'">
+      <h3>Enter Coordinates</h3>
+      <div class="input-coordinates">
+        <label>
+          Latitude:
+          <input type="number" [(ngModel)]="inputLat" (input)="updateCoordinates()" placeholder="Enter Latitude" />
+        </label>
+        <label>
+          Longitude:
+          <input type="number" [(ngModel)]="inputLng" (input)="updateCoordinates()" placeholder="Enter Longitude" />
+        </label>
+      </div>
+      <div class="output-coordinates" *ngIf="selectedLat !== null && selectedLng !== null">
+        <p>Selected Location: Latitude: {{ selectedLat }}, Longitude: {{ selectedLng }}</p>
+      </div>
+    </div>
+  
+    <div *ngIf="locationMethod === 'map'">
+      <h4>Map Location</h4>
+      <div id="map" style="height: 300px; border: 1px solid #ddd;"></div>
+      <!-- Implement map logic here -->
+    </div>
+  </div>
+  
