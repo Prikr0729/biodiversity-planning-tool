@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
+import { response } from 'express';
+import axios from 'axios';
+import { DataPopupComponent } from '../data-popup/data-popup.component'
+//
 @Component({
   selector: 'app-location-selection',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DataPopupComponent],
   templateUrl: './location-selection.component.html',
   styleUrls: ['./location-selection.component.scss']
 })
@@ -18,9 +20,9 @@ export class LocationSelectionComponent {
   locationMethod: string = 'manual';
   imageSrc: string | null = null;
   imageFile: File | null = null;
-
-  constructor() {}
-
+  responseData: any = null;
+  showModal: boolean = false;
+  
   toggleInputFields() {
     this.selectedLat = null;
     this.selectedLng = null;
@@ -36,7 +38,30 @@ export class LocationSelectionComponent {
       this.selectedLng = this.inputLng;
     }
   }
-
+  SendCoordinates() {
+    // Make api call to send coordinates
+    // TO-DO remove below line when API start giving reponse.
+    this.showModal = true; 
+    if (this.inputLat !== null && this.inputLng !== null) {
+    const apiUrl = 'http://127.0.0.1:5000/getPlantSuggestions';
+    const requestData = {
+    lat: this.inputLat,
+    lon: this.inputLng
+    };
+    try {
+      const response = axios.post(apiUrl, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      this.responseData = response;
+      this.showModal = true;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  }
+  
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
@@ -54,24 +79,33 @@ export class LocationSelectionComponent {
     this.imageFile = null; // Clear the stored file
   }
 
-  uploadImage() {
-    // if (this.imageFile) {
-    //   const formData = new FormData();
-    //   formData.append('image', this.imageFile);
+ async uploadImage() {
+    if (this.imageFile) {
+      const formData = new FormData();
+      formData.append('file', this.imageFile);
 
-    //   // Replace 'your-api-endpoint' with your actual API endpoint
-    //   this.http.post('your-api-endpoint', formData).subscribe(
-    //     response => {
-    //       console.log('Upload successful:', response);
-    //       // Handle success (e.g., show a message, clear fields, etc.)
-    //     },
-    //     error => {
-    //       console.error('Upload failed:', error);
-    //       // Handle error (e.g., show an error message)
-    //     }
-    //   );
-    // } else {
-    //   console.error('No file selected for upload.');
-    // }
+      try {
+        const response = await axios.post('http://127.0.0.1:5000/getPlantSuggestionsUsingPicture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',// Allow CORS
+          }
+        });
+        console.log('File uploaded successfully', response.data);
+      } catch (error) {
+        console.error('Error uploading file', error);
+      }
+    } else {
+      console.error('No file selected');
+    }
+  }
+  closeModal() {
+    this.selectedLat = null;
+    this.selectedLng = null;
+    this.inputLat = null;
+    this.inputLng = null;
+    this.imageSrc = null; 
+    this.imageFile = null;
+    this.showModal = false;
   }
 }

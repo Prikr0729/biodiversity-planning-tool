@@ -61,11 +61,11 @@
   .output-coordinates {
     margin-top: 20px;
     padding: 10px;
-    background-color: #b2ebf2;
+    background-color:white;
     border-radius: 4px;
     text-align: center;
     font-weight: bold;
-    color: #00796b;
+    color: black;
   }
 
   .map-container {
@@ -77,4 +77,28 @@
       border: 1px solid #ddd;
     }
   }
+}
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button {
+  background-color: rgba(99, 132, 167, 0.9);
+  color: white;
+  margin-left: 250px;
+}
+
+.button:hover {
+  background-color: rgba(70, 118, 168, 0.9);
 }
